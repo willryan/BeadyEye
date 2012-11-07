@@ -40,7 +40,13 @@ class DI:
     alteredName as string = name[0:1].ToUpper() + name[1:] + ", " + _assembly
     objType as Type = Type.GetType(alteredName)
     constr as ConstructorInfo = objType.GetConstructor((Hash,))
-    return constr.Invoke(({},))
+    if constr:
+      return constr.Invoke(({},))
+    else:
+      constr = objType.GetConstructor((,))
+      if constr:
+        return constr.Invoke((,))
+    raise "valid constructor for $(objType) not found"
 
   def SetObject(name as string, obj as object):
     _objects[name] = obj
