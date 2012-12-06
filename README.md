@@ -34,3 +34,16 @@ BeadyEye assumes that the classnames are in the same assembly as the object bein
 case, for now you will have to provide that object on construction.  Later I intend to add support for a YAML file
 to guide BeadyEye in construction.
 
+Finally, you can specify the type before the member name by <Type>.<MemberName>:
+
+class MyClass:
+
+  constructsWith MyType.foo, duck.bar, bool.baz
+
+  def MyFunc():
+    if baz:
+      foo.MyTypFunc(bar.AnyFunc())
+
+TODO: infer type by member name if not supplied
+
+

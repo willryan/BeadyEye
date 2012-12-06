@@ -5,7 +5,10 @@ import Boo.Lang.Compiler.Ast
 
 macro constructsWith:
   for member as ReferenceExpression in constructsWith.Arguments:
-    yield Field(Name: member.Name, Type: SimpleTypeReference("duck"), Modifiers: TypeMemberModifiers.Protected)
+    __type as string = "object"
+    if member isa MemberReferenceExpression:
+      __type = (member as MemberReferenceExpression).Target.ToString()
+    yield Field(Name: member.Name, Type: SimpleTypeReference(__type), Modifiers: TypeMemberModifiers.Protected)
   klass = [|
     def constructor(args as Hash):
       DI.SetAssembly(self.GetType().Assembly.FullName.ToString())
