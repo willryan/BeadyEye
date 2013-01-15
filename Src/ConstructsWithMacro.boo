@@ -16,7 +16,7 @@ macro constructsWith:
   for member as ReferenceExpression in constructsWith.Arguments:
     memberName = member.Name
     klass.Body.Add([|
-      self.$memberName = (args[$memberName] or DI.Get($memberName))
+      self.$memberName = (args[$memberName] if args.ContainsKey($memberName) else DI.Get($memberName))
     |])
   yield klass
 
