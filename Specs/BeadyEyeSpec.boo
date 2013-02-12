@@ -25,6 +25,7 @@ class Test5:
   def GetFooStuff():
     return foo.GetTest3()
 
+#WFIXME for now only reuses object if you "Set" it, what should it be???
 class BeadyEyeSpec (Spec):
   def Spec():
     BeforeAll() do:

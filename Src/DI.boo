@@ -14,7 +14,10 @@ class DI:
     Singleton().ClearObjects()
 
   static def Get(name as string):
-    return Singleton().GetObject(name)
+    return Singleton().GetObject(name, name)
+
+  static def Get(name as string, objType as string):
+    return Singleton().GetObject(name, objType)
 
   static def Set(name as string, obj as object):
     Singleton().SetObject(name, obj)
@@ -31,22 +34,32 @@ class DI:
     _assembly = "Assembly-Boo"
     ClearObjects()
 
-  def GetObject(name as string):
-    if _objects[name] == null:
-      _objects[name] = CreateObject(name)
-    return _objects[name]
-
-  def CreateObject(name as string):
-    alteredName as string = name[0:1].ToUpper() + name[1:] + ", " + _assembly
-    objType as Type = Type.GetType(alteredName)
-    constr as ConstructorInfo = objType.GetConstructor((Hash,))
-    if constr:
-      return constr.Invoke(({},))
+  #WFIXME how to share, when to share
+  def GetObject(name as string, objType as string):
+    if _objects[name] != null:
+      return _objects[name]
     else:
-      constr = objType.GetConstructor((,))
+      obj = CreateObject(objType)
+      #_objects[name] = obj
+      return obj
+
+  # WFIXME break apart
+  def CreateObject(strType as string):
+    obj = CreateDefaultTypes(strType)
+    if obj != null:
+      return obj
+    upperType = strType[0:1].ToUpper() + strType[1:]
+    alteredType = upperType + ", " + _assembly
+    objType = Type.GetType(alteredType)
+    if objType != null:
+      constr as ConstructorInfo = objType.GetConstructor((Hash,))
       if constr:
-        return constr.Invoke((,))
-    raise "valid constructor for $(objType) not found"
+        return constr.Invoke(({},))
+      else:
+        constr = objType.GetConstructor((,))
+        if constr:
+          return constr.Invoke((,))
+    raise "valid constructor for $(upperType) not found"
 
   def SetObject(name as string, obj as object):
     _objects[name] = obj
@@ -56,3 +69,18 @@ class DI:
 
   def SetAssemblyName(name as string):
     _assembly = name
+
+  private def CreateDefaultTypes(strType as string) as object:
+    if strType == "Hash":
+      return Hash()
+    elif strType == "List":
+      return List()
+    elif strType == "int" or strType == "double":
+      return 0
+    elif strType == "bool":
+      return false
+    elif strType == "string":
+      return ""
+    else:
+      return null
+

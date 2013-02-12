@@ -15,8 +15,11 @@ macro constructsWith:
   |]
   for member as ReferenceExpression in constructsWith.Arguments:
     memberName = member.Name
+    objType = memberName
+    if member isa MemberReferenceExpression:
+      objType = (member as MemberReferenceExpression).Target.ToString()
     klass.Body.Add([|
-      self.$memberName = (args[$memberName] if args.ContainsKey($memberName) else DI.Get($memberName))
+      self.$memberName = (args[$memberName] if args.ContainsKey($memberName) else DI.Get(($memberName), ($objType)))
     |])
   yield klass
 
