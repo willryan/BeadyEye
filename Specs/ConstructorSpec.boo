@@ -3,7 +3,8 @@ import BooSpec
 
 class TestClass:
 
-  constructsWith alpha, beta, gamma
+  constructsWith int.alpha, int.beta, int.gamma:
+    gamma = gamma + 1
 
   def getAlpha():
     return alpha
@@ -21,4 +22,4 @@ class ConstructorSpec (Spec):
         tester = TestClass({'alpha': 1, 'beta': 2, 'gamma': 3})
         Expect(tester.getAlpha()).ToEqual(1)
         Expect(tester.getBeta()).ToEqual(2)
-        Expect(tester.getGamma()).ToEqual(3)
+        Expect(tester.getGamma()).ToEqual(4)
